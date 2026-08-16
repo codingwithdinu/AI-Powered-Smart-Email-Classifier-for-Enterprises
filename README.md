@@ -112,10 +112,11 @@ Before an email is classified, it goes through a cleaning pipeline:
 
 ```
 .
+├── Dockerfile                     # Container build (copies backend + frontend)
+├── .dockerignore                  # Files excluded from Docker build
 ├── backend/                       # Flask API + ML pipeline
 │   ├── app.py                     # Flask application (entry point)
 │   ├── requirements.txt           # Python dependencies
-│   ├── Dockerfile                 # Container build
 │   ├── Procfile                   # Heroku / gunicorn process
 │   ├── wsgi.py                    # WSGI entry point
 │   ├── models/                    # Trained .pkl models + vectorizers
@@ -293,10 +294,11 @@ python train_urgency_model.py
 ## 🐳 Docker
 
 ```bash
-cd backend
+# Build from the project ROOT (the Dockerfile copies both backend/ and frontend/)
 docker build -t email-classifier .
 docker run -p 5000:5000 email-classifier
 ```
+
 
 ---
 
