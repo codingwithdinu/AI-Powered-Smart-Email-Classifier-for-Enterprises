@@ -15,4 +15,6 @@ WORKDIR /app/backend
 
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+# Uses $PORT when set (Render/Railway/Heroku), falls back to 5000 locally
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5000} app:app"]
+
