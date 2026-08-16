@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Smart Email Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="site-header">
+            <div class="brand">
+                <div class="logo">📊</div>
+                <div>
+                    <h1>Smart Email Dashboard</h1>
+                    <p class="tagline">Live predictions &amp; urgency model analytics</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="/">Classify</a>
+                <a href="/dashboard" class="active">Dashboard</a>
+            </nav>
+        </header>
+
+        {% if error %}
+        <div class="card" style="border-color:#f5c6c6;background:#fdecec;color:#dc2626;margin-bottom:16px;">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if result %}
+        <div class="card" style="margin-bottom:16px;">
+            <h2 class="card-title">Latest Prediction</h2>
+            <div class="result-head">
+                <span class="badge category">{{ result.category }}</span>
+                {% set u = result.urgency|lower %}
+                <span class="badge {{ 'high' if u == 'high' else ('medium' if u == 'medium' else 'low') }}">
+                    {{ result.urgency }} urgency
+                </span>
+            </div>
+            <div class="conf-row">
+                <div class="conf-label"><span><strong>Category confidence</strong></span>
+                    <span class="mono">{{ result.category_confidence }}%</span></div>
+                <div class="bar"><div class="fill" data-fill="{{ result.category_confidence }}"></div></div>
+            </div>
+            <div class="conf-row">
+                <div class="conf-label"><span><strong>Urgency confidence</strong></span>
+                    <span class="mono">{{ result.urgency_confidence }}%</span></div>
+                <div class="bar"><div class="fill urgency-fill" data-fill="{{ result.urgency_confidence }}"></div></div>
+            </div>
+            <p class="muted" style="margin:14px 0 0;font-size:0.82rem;">
+                Classified at <span class="mono">{{ result.timestamp }}</span>
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="metric-grid">
+            <div class="metric">
+                <p class="label">Total Predictions</p>
+                <p class="value">{{ history_summary.total }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">High Urgency</p>
+                <p class="value">{{ history_summary.high_count }} ({{ history_summary.high_rate }}%)</p>
+            </div>
+            <div class="metric">
+                <p class="label">Avg Category Conf.</p>
+                <p class="value">{{ history_summary.avg_cat_conf }}%</p>
+            </div>
+            <div class="metric">
+                <p class="label">Avg Urgency Conf.</p>
+                <p class="value">{{ history_summary.avg_urg_conf }}%</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-head"><h2>Prediction History</h2></div>
+            <div class="card table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th><th>Email</th><th>Category</th>
+                            <th>Category Conf.</th><th>Urgency</th><th>Urgency Conf.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in history|reverse %}
+                        <tr>
+                            <td class="mono">{{ item.timestamp }}</td>
+                            <td>{{ item.email }}</td>
+                            <td><span class="badge category">{{ item.category }}</span></td>
+                            <td class="mono">{{ item.category_confidence }}%</td>
+                            {% set u = item.urgency|lower %}
+                            <td><span class="badge {{ 'high' if u == 'high' else ('medium' if u == 'medium' else 'low') }}">{{ item.urgency }}</span></td>
+                            <td class="mono">{{ item.urgency_confidence }}%</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="6" class="muted" style="text-align:center;">No predictions yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-head">
+                <h2>Urgency Model Analytics</h2>
+                <span class="muted" style="font-size:0.85rem;">From training dataset</span>
+            </div>
+            <div class="metric-grid">
+                <div class="metric">
+                    <p class="label">Training Rows</p>
+                    <p class="value">{{ training_summary.training_rows }}</p>
+                </div>
+                <div class="metric">
+                    <p class="label">Train Accuracy</p>
+                    <p class="value">{{ training_summary.accuracy }}%</p>
+                </div>
+                <div class="metric">
+                    <p class="label">max_iter</p>
+                    <p class="value">{{ training_summary.model_max_iter }}</p>
+                </div>
+                <div class="metric">
+                    <p class="label">TF-IDF max_features</p>
+                    <p class="value">{{ training_summary.vectorizer_max_features }}</p>
+                </div>
+            </div>
+
+            <div class="classify-grid" style="margin-top:16px;">
+                <div class="card">
+                    <h3 class="card-title">Urgency Distribution</h3>
+                    <table>
+                        <thead><tr><th>Class</th><th>Count</th></tr></thead>
+                        <tbody>
+                            {% for label, count in training_summary.distribution.items() %}
+                            <tr>
+                                <td><span class="badge {{ 'high' if label|lower == 'high' else ('medium' if label|lower == 'medium' else 'low') }}">{{ label }}</span></td>
+                                <td>{{ count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Class Metrics</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Urgency</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for row in training_summary.class_metrics %}
+                            <tr>
+                                <td><span class="badge {{ 'high' if row.label|lower == 'high' else ('medium' if row.label|lower == 'medium' else 'low') }}">{{ row.label }}</span></td>
+                                <td>{{ row.precision }}%</td>
+                                <td>{{ row.recall }}%</td>
+                                <td>{{ row.f1 }}%</td>
+                                <td>{{ row.support }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <a href="/" class="btn btn-primary" style="text-decoration:none;">← Classify Another Email</a>
+        </footer>
+    </div>
+
+    <script>
+        document.querySelectorAll(".fill[data-fill]").forEach((bar) => {
+            const p = Number.parseFloat(bar.dataset.fill || "0");
+            const safe = Number.isFinite(p) ? Math.max(0, Math.min(100, p)) : 0;
+            bar.style.width = `${safe}%`;
+        });
+    </script>
+</body>
+</html>

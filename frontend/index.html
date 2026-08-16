@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Email Classifier — AI Powered</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="site-header">
+            <div class="brand">
+                <div class="logo">✉️</div>
+                <div>
+                    <h1>Smart Email Classifier</h1>
+                    <p class="tagline">AI-powered categorization &amp; urgency detection for enterprises</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="/" class="active">Classify</a>
+                <a href="/dashboard">Dashboard</a>
+            </nav>
+        </header>
+
+        <!-- Classify + Result -->
+        <div class="classify-grid">
+            <div class="card">
+                <h2 class="card-title">Classify an Email</h2>
+                <form id="classify-form">
+                    <textarea id="email-input" class="email-input"
+                        placeholder="Paste the full email text here…"></textarea>
+                    <div class="btn-row">
+                        <button type="submit" id="classify-btn" class="btn btn-primary">Classify Email</button>
+                        <button type="button" id="clear-btn" class="btn btn-ghost">Clear</button>
+                    </div>
+                </form>
+                <div class="samples">
+                    <span class="muted" style="font-size:0.8rem;">Try a sample:</span>
+                    <span class="chip" data-sample="URGENT: Our production server is down and customers cannot login. Please fix this immediately!">🚨 Urgent outage</span>
+                    <span class="chip" data-sample="Your Amazon account was used on a new device. Claim your $5000 refund now at bit.ly/fakeprize">🛒 Spam</span>
+                    <span class="chip" data-sample="Hi team, here is the agenda for next week's planning meeting. Please review and share your feedback.">📅 Meeting</span>
+                    <span class="chip" data-sample="Your verification code is 482913. Enter it to complete your login.">🔐 Verify code</span>
+                </div>
+            </div>
+
+            <div class="card" id="result-panel">
+                <h2 class="card-title">Result</h2>
+                <div class="result-empty">
+                    <span class="emoji">📬</span>
+                    Your classification result will appear here.
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="section">
+            <div class="section-head">
+                <h2>Session Overview</h2>
+                <span class="muted" style="font-size:0.85rem;">Live from this session</span>
+            </div>
+            <div class="metric-grid">
+                <div class="metric">
+                    <p class="label">Total Predictions</p>
+                    <p class="value" id="m-total">0</p>
+                </div>
+                <div class="metric">
+                    <p class="label">High Urgency</p>
+                    <p class="value" id="m-high">0 (0%)</p>
+                </div>
+                <div class="metric">
+                    <p class="label">Avg Category Conf.</p>
+                    <p class="value" id="m-avg-cat">0%</p>
+                </div>
+                <div class="metric">
+                    <p class="label">Avg Urgency Conf.</p>
+                    <p class="value" id="m-avg-urg">0%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="section">
+            <div class="section-head">
+                <h2>Prediction History</h2>
+            </div>
+            <div class="card table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Email</th>
+                            <th>Category</th>
+                            <th>Category Conf.</th>
+                            <th>Urgency</th>
+                            <th>Urgency Conf.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        <tr><td colspan="6" class="muted" style="text-align:center;">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Training analytics -->
+        <div class="section">
+            <div class="section-head">
+                <h2>Urgency Model Analytics</h2>
+                <span class="muted" style="font-size:0.85rem;">From training dataset</span>
+            </div>
+            <div class="metric-grid">
+                <div class="metric">
+                    <p class="label">Training Rows</p>
+                    <p class="value" id="t-rows">—</p>
+                </div>
+                <div class="metric">
+                    <p class="label">Train Accuracy</p>
+                    <p class="value" id="t-acc">—</p>
+                </div>
+                <div class="metric">
+                    <p class="label">max_iter</p>
+                    <p class="value" id="t-max-iter">—</p>
+                </div>
+                <div class="metric">
+                    <p class="label">TF-IDF max_features</p>
+                    <p class="value" id="t-max-features">—</p>
+                </div>
+            </div>
+
+            <div class="classify-grid" style="margin-top:16px;">
+                <div class="card">
+                    <h3 class="card-title">Urgency Distribution</h3>
+                    <table>
+                        <thead><tr><th>Class</th><th>Count</th></tr></thead>
+                        <tbody id="dist-body">
+                            <tr><td colspan="2" class="muted">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Class Metrics</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Urgency</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr>
+                        </thead>
+                        <tbody id="class-metrics-body">
+                            <tr><td colspan="5" class="muted">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            AI-Powered Smart Email Classifier for Enterprises · Built with Flask + scikit-learn
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

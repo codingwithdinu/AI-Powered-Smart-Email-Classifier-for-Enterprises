@@ -1,0 +1,488 @@
+/* ==========================================================================
+   AI-Powered Smart Email Classifier — Design System
+   ========================================================================== */
+
+:root {
+    --bg: #f4f6fb;
+    --bg-accent: #eef2ff;
+    --panel: #ffffff;
+    --ink: #1e2233;
+    --ink-soft: #5b6172;
+    --line: #e4e8f1;
+    --primary: #4f46e5;
+    --primary-dark: #3c35c4;
+    --primary-soft: #eef0ff;
+    --high: #dc2626;
+    --high-soft: #fdecec;
+    --medium: #b45309;
+    --medium-soft: #fdf3e3;
+    --low: #15803d;
+    --low-soft: #e9f9ef;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(30, 34, 51, 0.08);
+    --shadow-sm: 0 2px 8px rgba(30, 34, 51, 0.06);
+    --font: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font);
+    color: var(--ink);
+    background:
+        radial-gradient(circle at 12% -10%, #e0e7ff 0%, transparent 38%),
+        radial-gradient(circle at 90% 0%, #dbeafe 0%, transparent 34%),
+        var(--bg);
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+/* ---------- Layout ---------- */
+.container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand .logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--primary), #7c3aed);
+    color: #fff;
+    box-shadow: var(--shadow-sm);
+}
+
+.brand h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    letter-spacing: -0.2px;
+}
+
+.brand .tagline {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin: 2px 0 0;
+}
+
+.nav {
+    display: flex;
+    gap: 8px;
+}
+
+.nav a {
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.nav a:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.nav a.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 20px;
+}
+
+.card + .card {
+    margin-top: 16px;
+}
+
+.card-title {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+/* ---------- Classify panel ---------- */
+.classify-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 860px) {
+    .classify-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+textarea.email-input {
+    width: 100%;
+    min-height: 180px;
+    resize: vertical;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: #fbfcfe;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+textarea.email-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 18px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.08s ease, background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), #6d28d9);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
+}
+
+.btn-primary:hover {
+    opacity: 0.94;
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-ghost {
+    background: var(--panel);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+}
+
+.btn-ghost:hover {
+    background: var(--bg-accent);
+}
+
+.btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Sample chips ---------- */
+.samples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.chip {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--bg-accent);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.chip:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* ---------- Result ---------- */
+.result-empty {
+    text-align: center;
+    color: var(--ink-soft);
+    padding: 30px 10px;
+}
+
+.result-empty .emoji {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.result-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.result-head .category-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1px solid;
+}
+
+.badge.high {
+    color: var(--high);
+    background: var(--high-soft);
+    border-color: #f5c6c6;
+}
+
+.badge.medium {
+    color: var(--medium);
+    background: var(--medium-soft);
+    border-color: #f0d9ae;
+}
+
+.badge.low {
+    color: var(--low);
+    background: var(--low-soft);
+    border-color: #bce7cc;
+}
+
+.badge.category {
+    color: var(--primary);
+    background: var(--primary-soft);
+    border-color: #d5d8ff;
+}
+
+/* ---------- Confidence bars ---------- */
+.conf-row {
+    margin: 12px 0;
+}
+
+.conf-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+}
+
+.conf-label strong {
+    color: var(--ink);
+}
+
+.bar {
+    height: 8px;
+    border-radius: 999px;
+    background: #eef1f7;
+    overflow: hidden;
+}
+
+.bar .fill {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary), #7c3aed);
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bar .fill.urgency-fill {
+    background: linear-gradient(90deg, #f59e0b, #dc2626);
+}
+
+/* ---------- Metric grid ---------- */
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+}
+
+.metric {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.metric .label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ink-soft);
+    margin: 0 0 6px;
+}
+
+.metric .value {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+.metric .hint {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+}
+
+/* ---------- Tables ---------- */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+}
+
+th {
+    background: var(--bg-accent);
+    color: var(--ink);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.mono {
+    font-family: "SFMono-Regular", Consolas, "Courier New", monospace;
+    font-size: 0.82rem;
+}
+
+/* ---------- Section spacing ---------- */
+.section {
+    margin-top: 22px;
+}
+
+.section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-head h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    letter-spacing: -0.2px;
+}
+
+.muted {
+    color: var(--ink-soft);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+}
+
+/* ---------- Spinner ---------- */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---------- Toast ---------- */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 50;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+}
